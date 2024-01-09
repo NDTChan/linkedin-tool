@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>index</title>
+</head>
+<body>
+<h1>Linkedin Tool For VMO Ted Team</h1>
+<form action="#" th:action="@{/greeting}" th:object="${filterModel}" method="post">
+    <label>
+        Search Global
+        <input type="text" th:field="*{globalNavSearch}" />
+    </label>
+    <label>
+        Grouping Bar Filter
+    </label>
+    <div th:each="toolbarEnum: ${lstFilterBarGrouping}">
+        <input type="radio" th:id="${toolbarEnum.getName().toLowerCase()}" name="fav_language" th:value="${toolbarEnum.getValue()}">
+        <label th:for="${toolbarEnum.getName().toLowerCase()}">${toolbarEnum.getName()}</label>
+    </div>
+    <p><input type="submit" value="Submit" /> <input type="reset" value="Reset" /></p>
+</form>
+
+<input/>
+</body>
+</html>
