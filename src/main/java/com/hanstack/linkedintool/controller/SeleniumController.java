@@ -21,7 +21,7 @@ public class SeleniumController {
     WebDriver driver;
 
     @GetMapping
-    public String sync(Model model) {
+    public String sync(Model model) throws InterruptedException {
         WebDriverManager.chromedriver().setup();
         driver = new ChromeDriver();
         driver.get("https://www.linkedin.com/");
@@ -31,16 +31,18 @@ public class SeleniumController {
         password.sendKeys("Admin@10525597");
 
         WebElement submitBtn = driver.findElement(By.cssSelector("button[type=submit]"));
+        Thread.sleep(1000);
         submitBtn.submit();
-        WebElement searchBar = driver.findElement(By.className("search-global-typeahead__input"));
-        Wait<WebDriver> wait = new WebDriverWait(driver, Duration.ofMinutes(5));
 
+        Wait<WebDriver> wait = new WebDriverWait(driver, Duration.ofMinutes(5));
+        WebElement searchBar = driver.findElement(By.className("search-global-typeahead__input"));
         wait.until( d -> {
             searchBar.isDisplayed();
             return true;
         });
 
         searchBar.sendKeys("CTO");
+        Thread.sleep(1000);
         searchBar.sendKeys(Keys.ENTER);
         return "indexBasic";
     }
