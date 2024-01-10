@@ -1,4 +1,4 @@
-package com.hanstack.linkedintool.model;
+package com.hanstack.linkedintool.dto;
 
 
 import com.hanstack.linkedintool.constant.ToolbarEnum;
@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class FilterEntity {
+public class FilterDTO {
     private ToolbarEnum filterBarGrouping;
     private String globalNavSearch;
 }

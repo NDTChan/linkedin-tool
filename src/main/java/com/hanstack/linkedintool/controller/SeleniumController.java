@@ -1,16 +1,26 @@
 package com.hanstack.linkedintool.controller;
 
+import com.hanstack.linkedintool.config.SeleniumFactory;
+import com.hanstack.linkedintool.dto.FilterDTO;
+import com.hanstack.linkedintool.dto.LinkedinDTO;
+import com.hanstack.linkedintool.dto.LoginDTO;
 import io.github.bonigarcia.wdm.WebDriverManager;
+import jakarta.servlet.http.HttpSession;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.time.Duration;
@@ -18,32 +28,30 @@ import java.time.Duration;
 @Controller
 @RequestMapping("/selenium")
 public class SeleniumController {
-    WebDriver driver;
+//    private final WebDriver driver;
+//    private final Wait<WebDriver> wait;
+//
+//    public SeleniumController(WebDriver driver, Wait<WebDriver> wait) {
+//        this.driver = driver;
+//        this.wait = wait;
+//    }
 
-    @GetMapping
-    public String sync(Model model) throws InterruptedException {
+    @PostMapping
+    public String process(@ModelAttribute LinkedinDTO linkedinDTO, HttpSession httpSession, Model model) throws Exception {
+        FilterDTO filterDTO = linkedinDTO.getFilterDTO();
+        LoginDTO loginDTO = linkedinDTO.getLoginDTO();
+
         WebDriverManager.chromedriver().setup();
-        driver = new ChromeDriver();
-        driver.get("https://www.linkedin.com/");
-        WebElement username = driver.findElement(By.id("session_key"));
-        username.sendKeys("justducthanh105mta@gmail.com");
-        WebElement password = driver.findElement(By.id("session_password"));
-        password.sendKeys("Admin@10525597");
+        WebDriver driver = new ChromeDriver(new ChromeOptions().addArguments("--incognito"));
+        Wait<WebDriver> wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 
-        WebElement submitBtn = driver.findElement(By.cssSelector("button[type=submit]"));
-        Thread.sleep(1000);
-        submitBtn.submit();
-
-        Wait<WebDriver> wait = new WebDriverWait(driver, Duration.ofMinutes(5));
-        WebElement searchBar = driver.findElement(By.className("search-global-typeahead__input"));
-        wait.until( d -> {
-            searchBar.isDisplayed();
-            return true;
-        });
-
-        searchBar.sendKeys("CTO");
-        Thread.sleep(1000);
-        searchBar.sendKeys(Keys.ENTER);
-        return "indexBasic";
+        SeleniumFactory seleniumFactory = new SeleniumFactory(driver, wait);
+        seleniumFactory.deleteAndImportCookies(linkedinDTO.getLoginDTO().getCookieFile());
+        seleniumFactory.startLinkedin();
+        seleniumFactory.signIn(loginDTO.getUsername(), loginDTO.getPassword());
+        seleniumFactory.searchByFilter(filterDTO);
+        driver.quit();
+        model.addAttribute(httpSession.getAttribute("linkedinDTO"));
+        return "index";
     }
 }
