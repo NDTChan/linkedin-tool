@@ -6,6 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.openqa.selenium.Cookie;
+
+import java.util.Set;
 
 @Data
 @Builder

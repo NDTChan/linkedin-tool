@@ -4,8 +4,8 @@
 #    username: root
 #    password: root
 
-#server:
-#  port: 5000
+server:
+  port: 8081
 
 spring:
   thymeleaf:
