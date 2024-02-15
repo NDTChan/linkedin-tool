@@ -7,19 +7,23 @@ import com.hanstack.linkedintool.dto.LinkedinDTO;
 import com.hanstack.linkedintool.dto.LoginDTO;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.io.File;
 import java.time.Duration;
 import java.util.Arrays;
 
@@ -43,14 +47,15 @@ public class SeleniumController {
 
         WebDriverManager.chromedriver().setup();
 //        WebDriver driver = new ChromeDriver(new ChromeOptions().addArguments("--incognito"));
-        WebDriver driver = new ChromeDriver();
+
+        WebDriver driver = new ChromeDriver(new ChromeOptions().addExtensions(new ClassPathResource("static/crx/J2TEAM-Cookies.crx").getFile()));
         driver.manage().timeouts().implicitlyWait(Duration.ofMinutes(1));
         Wait<WebDriver> wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         try {
             SeleniumFactory seleniumFactory = new SeleniumFactory(driver, wait);
-            seleniumFactory.deleteAndImportCookies(linkedinDTO.getLoginDTO().getCookieFile());
             seleniumFactory.startLinkedin();
-            seleniumFactory.signIn(loginDTO.getUsername(), loginDTO.getPassword());
+            seleniumFactory.deleteAndImportCookies(linkedinDTO.getLoginDTO().getCookieFile());
+//            seleniumFactory.signIn(loginDTO.getUsername(), loginDTO.getPassword());
             seleniumFactory.searchByFilter(filterDTO, httpSession);
 
             model.addAttribute("lstFilterBarGrouping", ToolbarEnum.values());

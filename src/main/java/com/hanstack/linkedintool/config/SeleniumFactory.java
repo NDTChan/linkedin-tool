@@ -11,9 +11,13 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Wait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.math.BigDecimal;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 
 @Slf4j
@@ -45,7 +49,21 @@ public class SeleniumFactory {
 
 
     public void deleteAndImportCookies(MultipartFile cookieFile) throws Exception {
-//        driver.manage().deleteAllCookies();
+        driver.manage().deleteAllCookies();
+        String originalWindow = driver.getWindowHandle();
+        Thread.sleep(1000);
+        driver.switchTo().newWindow(WindowType.TAB);
+        driver.get("chrome-extension://okpidcojinmlaakglciglbpcpajaibco/popup.html?url=aHR0cHM6Ly93d3cubGlua2VkaW4uY29tLw%3D%3D");
+        WebElement fileInput = driver.findElement(By.cssSelector("input[type=file]"));
+        Path tempFile = Files.createTempFile("tempfiles", ".tmp");
+        cookieFile.transferTo(tempFile);
+        fileInput.sendKeys(tempFile.toString());
+        for (String windowHandle : driver.getWindowHandles()) {
+            if (originalWindow.contentEquals(windowHandle)) {
+                driver.switchTo().window(windowHandle);
+                driver.navigate().refresh();
+            }
+        }
 
 //        JSONParser parser = new JSONParser(cookieFile.getInputStream());
 //        var lstLinkHashMap = (ArrayList) ((LinkedHashMap) parser.parse()).get("cookies");
@@ -103,5 +121,14 @@ public class SeleniumFactory {
 
         driver.findElement(byGroupFilter).click();
     }
+
+    public void allFilter(FilterDTO filterDTO) {
+        By byAllFilter = By.xpath("//button[@aria-pressed='false'][normalize-space()='People]\"(//button[normalize-space()='All filters'])[1]\"undefined");
+        wait.until(ExpectedConditions.presenceOfElementLocated(byAllFilter));
+
+        driver.findElement(byAllFilter).click();
+
+    }
+
 
 }

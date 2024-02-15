@@ -17,11 +17,11 @@ public class HomeController {
                 .globalNavSearch("CEO")
                 .filterBarGrouping(ToolbarEnum.PEOPLE)
                 .build();
-        LoginDTO loginDTO = LoginDTO.builder()
-                .username("justducthanh105mta@gmail.com")
-                .password("Admin@10525597")
-                .build();
-        LinkedinDTO linkedinDTO = LinkedinDTO.builder().filterDTO(filterDTO).loginDTO(loginDTO).build();
+//        LoginDTO loginDTO = LoginDTO.builder()
+//                .username("justducthanh105mta@gmail.com")
+//                .password("Admin@10525597")
+//                .build();
+        LinkedinDTO linkedinDTO = LinkedinDTO.builder().filterDTO(filterDTO).build();
 
         model.addAttribute("lstFilterBarGrouping", ToolbarEnum.values());
         model.addAttribute(linkedinDTO);
