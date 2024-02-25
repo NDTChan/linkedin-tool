@@ -1,12 +1,16 @@
-#spring:
-#  datasource:
-#    url: jdbc:mysql://localhost:3306/linkedin
-#    username: root
-#    password: root
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/linkedin
+    username: root
+    password: Admin@10525597
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+    hibernate:
+      ddl-auto: update
+  thymeleaf:
+    cache: false
 
 server:
   port: 8081
-
-spring:
-  thymeleaf:
-    cache: false

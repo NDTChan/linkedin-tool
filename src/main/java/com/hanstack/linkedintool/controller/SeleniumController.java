@@ -1,13 +1,12 @@
 package com.hanstack.linkedintool.controller;
 
 import com.hanstack.linkedintool.config.SeleniumFactory;
-import com.hanstack.linkedintool.constant.ToolbarEnum;
+import com.hanstack.linkedintool.enums.ToolbarEnum;
 import com.hanstack.linkedintool.dto.FilterDTO;
 import com.hanstack.linkedintool.dto.LinkedinDTO;
 import com.hanstack.linkedintool.dto.LoginDTO;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import jakarta.servlet.http.HttpSession;
-import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -23,9 +22,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.io.File;
 import java.time.Duration;
-import java.util.Arrays;
 
 @Controller
 @Slf4j

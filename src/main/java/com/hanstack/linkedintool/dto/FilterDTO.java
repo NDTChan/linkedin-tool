@@ -1,15 +1,13 @@
 package com.hanstack.linkedintool.dto;
 
 
-import com.hanstack.linkedintool.constant.ToolbarEnum;
+import com.hanstack.linkedintool.enums.ToolbarEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.openqa.selenium.Cookie;
 
 import java.util.List;
-import java.util.Set;
 
 @Data
 @Builder
@@ -30,6 +28,4 @@ public class FilterDTO {
     private List<String> lstProfileLanguage;
     private List<String> lstOpenTo;
     private List<String> lstServiceCategories;
-
-
 }

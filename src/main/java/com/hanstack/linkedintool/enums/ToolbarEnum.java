@@ -1,4 +1,4 @@
-package com.hanstack.linkedintool.constant;
+package com.hanstack.linkedintool.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
