@@ -2,7 +2,7 @@
 
 <html
         xmlns:th="http://www.thymeleaf.org"
-        th:fragment="layout (template, menu)"
+        th:fragment="layout (template, menu, title)"
         lang="en"
         class="light-style layout-menu-fixed layout-compact"
         dir="ltr"
@@ -15,7 +15,7 @@
             name="viewport"
             content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
     
-    <title>Linkedin Tool</title>
+    <title th:text="${#strings.isEmpty(title)? 'Linkedin Tool': title}">Linkedin Tool</title>
     
     <meta name="description" content=""/>
     
@@ -41,7 +41,9 @@
     <link rel="stylesheet" th:href=" @{/vendor/libs/apex-charts/apex-charts.css}"/>
     
     <!-- Page CSS -->
-    <link rel="stylesheet" th:href="@{/vendor/css/pages/page-auth.css}"/>
+    <!-- Page -->
+    <link rel="stylesheet" th:href="@{/vendor/css/pages/page-auth.css}"
+          th:if="${menu eq 'login' or menu eq 'register' or menu eq 'forgot-password'}"/>
     
     <!-- Helpers -->
     <script th:src=" @{/vendor/js/helpers.js}"></script>

@@ -10,9 +10,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -34,7 +32,7 @@ public class UserServiceImpl implements UserService {
         if(role == null){
             role = checkRoleExist();
         }
-        user.setRoles(Arrays.asList(role));
+        user.setRoles(List.of(role));
         userRepository.save(user);
     }
 
@@ -43,19 +41,6 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByEmail(email);
     }
 
-    @Override
-    public List<UserDTO> findAllUsers() {
-        List<User> users = userRepository.findAll();
-        return users.stream().map((user) -> convertEntityToDto(user))
-                .collect(Collectors.toList());
-    }
-
-    private UserDTO convertEntityToDto(User user){
-        UserDTO userDto = new UserDTO();
-        userDto.setUserName(user.getName());
-        userDto.setEmail(user.getEmail());
-        return userDto;
-    }
 
     private Role checkRoleExist() {
         Role role = new Role();

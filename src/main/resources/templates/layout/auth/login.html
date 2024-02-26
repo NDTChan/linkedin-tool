@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="https://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::body},'login')}">
+<html th:replace="~{fragments/layout :: layout (~{::body}, 'login', 'Login')}" xmlns:th="https://www.thymeleaf.org">
 <body>
 <div class="container-xxl">
     <div class="authentication-wrapper authentication-basic container-p-y">
@@ -65,22 +65,27 @@
                     <!-- /Logo -->
                     <h4 class="mb-2">Welcome to Sneat! 👋</h4>
                     <p class="mb-4">Please sign-in to your account and start the adventure</p>
-
-                    <form id="formAuthentication" class="mb-3" action="index.html">
+                    <div th:if="${param.error}">
+                        <div class="alert alert-danger">Invalid Email and Password.</div>
+                    </div>
+                    <div th:if="${param.logout}">
+                        <div class="alert alert-success">You have been logged out.</div>
+                    </div>
+                    <form class="mb-3" method="post" role="form" th:action="@{/login}">
                         <div class="mb-3">
-                            <label for="email" class="form-label">Email or Username</label>
+                            <label class="form-label" for="username">Email</label>
                             <input
                                     type="text"
                                     class="form-control"
-                                    id="email"
-                                    name="email-username"
+                                    id="username"
+                                    name="username"
                                     placeholder="Enter your email or username"
                                     autofocus/>
                         </div>
                         <div class="mb-3 form-password-toggle">
                             <div class="d-flex justify-content-between">
                                 <label class="form-label" for="password">Password</label>
-                                <a href="auth-forgot-password-basic.html">
+                                <a th:href="@{/forgot-password}">
                                     <small>Forgot Password?</small>
                                 </a>
                             </div>
@@ -105,7 +110,7 @@
                             <button class="btn btn-primary d-grid w-100" type="submit">Sign in</button>
                         </div>
                     </form>
-
+                    
                     <p class="text-center">
                         <span>New on our platform?</span>
                         <a th:href="@{/register}">

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:th="https://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::body},'register')}">
+<html th:replace="~{fragments/layout :: layout (~{::body}, 'register', 'Sign Up')}"
+      xmlns:th="https://www.thymeleaf.org">
 <body>
-
 <div class="container-xxl">
     <div class="authentication-wrapper authentication-basic container-p-y">
         <div class="authentication-inner">
@@ -68,6 +68,18 @@
                     <p class="mb-4">Make your app management easy and fun!</p>
                     <form method="post" class="mb-3" role="form" th:action="@{/register/save}" th:object="${user}">
                         <div class="mb-3">
+                            <label class="form-label" for="email">Email</label>
+                            <input id="email"
+                                   name="email"
+                                   placeholder="Enter your email"
+                                   th:class="${#fields.hasErrors('email') ? 'is-invalid': ''} + ' form-control'"
+                                   th:field="*{email}"
+                                   type="text"/>
+                            <div class="invalid-feedback" th:errors="*{email}"
+                                 th:if="${#fields.hasErrors('email')}"></div>
+                        </div>
+                        
+                        <div class="mb-3">
                             <label for="userName" class="form-label">Username</label>
                             <input
                                     type="text"
@@ -81,16 +93,7 @@
                                  th:if="${#fields.hasErrors('userName')}">
                             </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Email</label>
-                            <input type="text"
-                                   th:class="${#fields.hasErrors('email') ? 'is-invalid': ''} + ' form-control'"
-                                   id="email" name="email"
-                                   th:field="*{email}"
-                                   placeholder="Enter your email"/>
-                            <div th:errors="*{email}" class="invalid-feedback"
-                                 th:if="${#fields.hasErrors('email')}"></div>
-                        </div>
+                        
                         <div class="mb-3 form-password-toggle">
                             <label class="form-label" for="password">Password</label>
                             <div class="input-group input-group-merge">

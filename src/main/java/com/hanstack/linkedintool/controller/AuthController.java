@@ -1,9 +1,9 @@
 package com.hanstack.linkedintool.controller;
 
-import com.hanstack.linkedintool.dto.UserDTO;
-import com.hanstack.linkedintool.enums.ToolbarEnum;
 import com.hanstack.linkedintool.dto.FilterDTO;
 import com.hanstack.linkedintool.dto.LinkedinDTO;
+import com.hanstack.linkedintool.dto.UserDTO;
+import com.hanstack.linkedintool.enums.ToolbarEnum;
 import com.hanstack.linkedintool.model.User;
 import com.hanstack.linkedintool.service.UserService;
 import jakarta.servlet.http.HttpSession;
@@ -21,16 +21,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class AuthController {
 
     private UserService userService;
-    @GetMapping("index")
+
+    @GetMapping("/home")
     public String home(Model model, HttpSession httpSession) {
         FilterDTO filterDTO = FilterDTO.builder()
                 .globalNavSearch("CEO")
                 .filterBarGrouping(ToolbarEnum.PEOPLE)
                 .build();
-//        LoginDTO loginDTO = LoginDTO.builder()
-//                .username("justducthanh105mta@gmail.com")
-//                .password("Admin@10525597")
-//                .build();
+
         LinkedinDTO linkedinDTO = LinkedinDTO.builder().filterDTO(filterDTO).build();
 
         model.addAttribute("lstFilterBarGrouping", ToolbarEnum.values());
@@ -43,6 +41,11 @@ public class AuthController {
     @GetMapping("/login")
     public String loginForm() {
         return "layout/auth/login";
+    }
+
+    @GetMapping("/forgot-password")
+    public String showForgotPasswordForm() {
+        return "layout/auth/forgot-password";
     }
 
     // handler method to handle user registration request
@@ -58,15 +61,16 @@ public class AuthController {
     public String registration(@Valid @ModelAttribute("user") UserDTO user,
                                BindingResult result,
                                Model model){
-        User existing = userService.findByEmail(user.getEmail());
-        if (existing != null) {
+        User existingEmail = userService.findByEmail(user.getEmail());
+        if (existingEmail != null) {
             result.rejectValue("email", null, "There is already an account registered with that email");
         }
+
         if (result.hasErrors()) {
             model.addAttribute("user", user);
             return "layout/auth/register";
         }
         userService.saveUser(user);
-        return "redirect:/register?success";
+        return "redirect:/login";
     }
 }
