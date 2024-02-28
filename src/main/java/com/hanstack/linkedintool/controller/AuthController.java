@@ -6,6 +6,7 @@ import com.hanstack.linkedintool.dto.UserDTO;
 import com.hanstack.linkedintool.enums.ToolbarEnum;
 import com.hanstack.linkedintool.model.User;
 import com.hanstack.linkedintool.service.UserService;
+import com.hanstack.linkedintool.util.AuthUtil;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -21,6 +22,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class AuthController {
 
     private UserService userService;
+
+    @GetMapping("/")
+    public String defaultHome() {
+        return "redirect:/home";
+    }
 
     @GetMapping("/home")
     public String home(Model model, HttpSession httpSession) {
@@ -40,6 +46,9 @@ public class AuthController {
 
     @GetMapping("/login")
     public String loginForm() {
+        if (AuthUtil.isLogin()) {
+            return "redirect:/home";
+        }
         return "layout/auth/login";
     }
 

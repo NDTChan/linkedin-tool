@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.logout.HeaderWriterLogoutHandler;
 import org.springframework.security.web.header.writers.ClearSiteDataHeaderWriter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
@@ -22,6 +23,8 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class SpringSecurity {
 
     private UserDetailsService userDetailsService;
+
+    private AuthenticationSuccessHandler customAuthenticationSuccessHandler;
 
     @Bean
     public static PasswordEncoder passwordEncoder() {
@@ -36,18 +39,21 @@ public class SpringSecurity {
                                 .requestMatchers("/crx/**", "/css/**", "/img/**", "/js/**", "/vendor/**").permitAll()
                                 .requestMatchers("/register/**").permitAll()
                                 .requestMatchers("/forgot-password/**").permitAll()
-                                .requestMatchers("/home").hasRole("ADMIN")
+                                .requestMatchers("/home", "/").hasRole("ADMIN")
+                                .requestMatchers("/selenium/**").hasRole("ADMIN")
                 ).formLogin(
                         form -> form
                                 .loginPage("/login")
                                 .loginProcessingUrl("/login")
-                                .defaultSuccessUrl("/home", true)
+//                                .defaultSuccessUrl("/home", true)
+                                .successHandler(customAuthenticationSuccessHandler)
                                 .permitAll()
 
                 ).logout(
                         logout -> logout
                                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                                 .addLogoutHandler(new HeaderWriterLogoutHandler(new ClearSiteDataHeaderWriter(ClearSiteDataHeaderWriter.Directive.ALL)))
+                                .logoutSuccessUrl("/login")
                                 .permitAll()
                 );
         return http.build();
@@ -59,4 +65,5 @@ public class SpringSecurity {
                 .userDetailsService(userDetailsService)
                 .passwordEncoder(passwordEncoder());
     }
+
 }
