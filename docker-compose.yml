@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: Admin@10525597
+      MYSQL_DATABASE: linkedin
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql  # Mount a volume for MySQL data on the host
+
+  linkedin-tool:
+    image: 10525597/linkedin-tool:latest # This is the image of spring-boot app pulling from docker-hub repo
+    container_name: linkedin-tool
+    depends_on:
+      - mysql
+    ports:
+      - "8081:8081"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/linkedin
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: Admin@10525597
+    volumes:
+      - backend_data:/app/data  # Mount a volume for application data
+
+volumes:
+  mysql_data:  # Define the volume for MySQL data
+  backend_data:  # Define the volume for application data

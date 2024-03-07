@@ -2,46 +2,21 @@ package com.hanstack.linkedintool.config;
 
 import com.hanstack.linkedintool.dto.FilterDTO;
 import jakarta.servlet.http.HttpSession;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tomcat.util.json.JSONParser;
 import org.openqa.selenium.*;
-import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Wait;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.math.BigDecimal;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.*;
 
 @Slf4j
+@AllArgsConstructor
 public class SeleniumFactory {
 
     private final WebDriver driver;
     private final Wait<WebDriver> wait;
-
-    @FindBy(id = "session_key")
-    private WebElement usernameInp;
-    @FindBy(id = "session_password")
-    private WebElement passwordInp;
-    @FindBy(css = "button[type=submit]")
-    private WebElement submitBtn;
-    @FindBy(className = "search-global-typeahead__input")
-    private WebElement searchBarInp;
-
-    Logger logger = LoggerFactory.getLogger(SeleniumFactory.class);
-
-    public SeleniumFactory(WebDriver driver, Wait<WebDriver> wait) {
-        this.driver = driver;
-        this.wait = wait;
-        PageFactory.initElements(this.driver, this);
-    }
 
     public void startLinkedin() {
         driver.get("https://www.linkedin.com");
@@ -55,7 +30,7 @@ public class SeleniumFactory {
         driver.switchTo().newWindow(WindowType.TAB);
         driver.get("chrome-extension://okpidcojinmlaakglciglbpcpajaibco/popup.html?url=aHR0cHM6Ly93d3cubGlua2VkaW4uY29tLw%3D%3D");
         WebElement fileInput = driver.findElement(By.cssSelector("input[type=file]"));
-        Path tempFile = Files.createTempFile("tempfiles", ".tmp");
+        File tempFile = File.createTempFile("temp", null);
         cookieFile.transferTo(tempFile);
         fileInput.sendKeys(tempFile.toString());
         for (String windowHandle : driver.getWindowHandles()) {
@@ -97,20 +72,11 @@ public class SeleniumFactory {
 //        }
     }
 
-    public void signIn(String username, String password) throws Exception {
-        usernameInp.sendKeys(username);
-        passwordInp.sendKeys(password);
-        Thread.sleep(1000);
-        submitBtn.click();
-    }
-
     public void searchByFilter(FilterDTO filterDTO, HttpSession httpSession) throws Exception {
         By byGlobalSearch = By.className("search-global-typeahead__input");
         wait.until(ExpectedConditions.presenceOfElementLocated(byGlobalSearch));
 
-//        Set<Cookie> cookies = driver.manage().getCookies();
-//        httpSession.setAttribute("cookie", cookies);
-
+        WebElement searchBarInp = driver.findElement(By.className("search-global-typeahead__input"));
         searchBarInp.sendKeys(filterDTO.getGlobalNavSearch());
         Thread.sleep(1000);
         searchBarInp.sendKeys(Keys.ENTER);
