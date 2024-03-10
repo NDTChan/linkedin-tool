@@ -25,4 +25,4 @@ EXPOSE 8081
 
 # Define the command to run when the container starts
 # This runs the Spring Boot application with an active Kubernetes profile
-ENTRYPOINT ["java", "-Dspring.profiles.active=k8s", "-jar", "linkedin-tool.jar"]
+ENTRYPOINT ["java", "-Dspring.profiles.active=prod", "-jar", "linkedin-tool.jar"]
