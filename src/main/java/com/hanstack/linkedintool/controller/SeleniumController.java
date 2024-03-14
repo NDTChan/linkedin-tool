@@ -33,10 +33,10 @@ public class SeleniumController {
             model.addAttribute("lstFilterBarGrouping", ToolbarEnum.values());
             model.addAttribute(httpSession.getAttribute("linkedinDTO"));
         } catch (Exception ex) {
-            log.error("ERROR: ", ex.getCause());
+            log.error("ERROR: {}", ex.getMessage());
         } finally {
             log.info("Close only the current browser window");
-            seleniumService.close();
+            seleniumService.quit();
         }
         return "index";
     }

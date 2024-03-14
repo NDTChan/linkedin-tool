@@ -27,25 +27,25 @@ services:
       - REMOTE_WEBDRIVER_PASSWORD=vmo@123
     volumes:
       - backend_data:/app/data  # Mount a volume for application data
-  node-docker:
-    image: selenium/node-docker:latest
-    volumes:
-      - ./volume/assets:/opt/selenium/assets
-      - ./volume/config.toml:/opt/bin/config.toml
-      - /var/run/docker.sock:/var/run/docker.sock
+  chrome:
+    image: selenium/node-chrome:4.18.1-20240224
+    shm_size: 2gb
     depends_on:
       - selenium-hub
     environment:
       - SE_EVENT_BUS_HOST=selenium-hub
       - SE_EVENT_BUS_PUBLISH_PORT=4442
       - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+
   selenium-hub:
-    image: selenium/hub:latest
+    image: selenium/hub:4.18.1-20240224
     container_name: selenium-hub
     ports:
       - "4442:4442"
       - "4443:4443"
       - "4444:4444"
+    volumes:
+      - ./volume/config.toml:/opt/selenium/config.toml
 volumes:
   mysql_data:  # Define the volume for MySQL data
   backend_data:  # Define the volume for application data

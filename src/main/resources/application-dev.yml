@@ -4,9 +4,6 @@ spring:
     username: root
     password: Admin@10525597
   jpa:
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MySQLDialect
     hibernate:
       ddl-auto: update
   thymeleaf:

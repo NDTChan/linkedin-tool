@@ -1,20 +1,20 @@
 package com.hanstack.linkedintool.service.impl;
 
 import com.hanstack.linkedintool.dto.FilterDTO;
-import com.hanstack.linkedintool.enums.ProfileEnum;
 import com.hanstack.linkedintool.service.SeleniumService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.*;
 import org.openqa.selenium.remote.LocalFileDetector;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.Wait;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.Duration;
 
 @Service
 @Slf4j
@@ -26,12 +26,11 @@ public class SeleniumServiceImpl implements SeleniumService {
 
     public SeleniumServiceImpl(
             @Value("${spring.profiles.active:}") String env,
-            WebDriver driver,
-            Wait<WebDriver> wait
+            WebDriver driver
     ) {
         this.env = env;
         this.driver = driver;
-        this.wait = wait;
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(2));
     }
 
     @Override
@@ -47,9 +46,9 @@ public class SeleniumServiceImpl implements SeleniumService {
             Thread.sleep(1000);
             driver.switchTo().newWindow(WindowType.TAB);
             driver.get("chrome-extension://okpidcojinmlaakglciglbpcpajaibco/popup.html?url=aHR0cHM6Ly93d3cubGlua2VkaW4uY29tLw%3D%3D");
-            if (StringUtils.equals(env, ProfileEnum.PROD.getName())) {
+//            if (StringUtils.equals(env, ProfileEnum.PROD.getName())) {
                 ((RemoteWebDriver) driver).setFileDetector(new LocalFileDetector());
-            }
+//            }
             WebElement fileInput = driver.findElement(By.cssSelector("input[type=file]"));
             File tempFile = File.createTempFile("temp", null);
             cookieFile.transferTo(tempFile);
