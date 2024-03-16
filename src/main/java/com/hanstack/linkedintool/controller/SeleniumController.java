@@ -1,5 +1,6 @@
 package com.hanstack.linkedintool.controller;
 
+import com.hanstack.linkedintool.config.WebDriverConfig;
 import com.hanstack.linkedintool.dto.FilterDTO;
 import com.hanstack.linkedintool.dto.LinkedinDTO;
 import com.hanstack.linkedintool.dto.LoginDTO;
@@ -21,11 +22,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class SeleniumController {
 
     private final SeleniumService seleniumService;
+
     @PostMapping
     public String process(@ModelAttribute LinkedinDTO linkedinDTO, HttpSession httpSession, Model model) throws Exception {
         FilterDTO filterDTO = linkedinDTO.getFilterDTO();
         LoginDTO loginDTO = linkedinDTO.getLoginDTO();
         try {
+            seleniumService.setDriver(WebDriverConfig.getDriverInstance());
             seleniumService.startLinkedin();
             seleniumService.deleteAndImportCookies(linkedinDTO.getLoginDTO().getCookieFile());
             seleniumService.searchByFilter(filterDTO);

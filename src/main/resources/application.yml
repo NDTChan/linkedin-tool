@@ -16,3 +16,7 @@ sftp:
   username: hanstack
   port: 21
   password: Admin@10525597
+
+chrome:
+  driver:
+    extension: chrome-extension://okpidcojinmlaakglciglbpcpajaibco/popup.html?url=aHR0cHM6Ly93d3cubGlua2VkaW4uY29tLw%3D%3D

@@ -1,36 +1,39 @@
 package com.hanstack.linkedintool.service.impl;
 
+import com.hanstack.linkedintool.config.WebDriverConfig;
 import com.hanstack.linkedintool.dto.FilterDTO;
+import com.hanstack.linkedintool.enums.ProfileEnum;
 import com.hanstack.linkedintool.service.SeleniumService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.*;
 import org.openqa.selenium.remote.LocalFileDetector;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.Wait;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.time.Duration;
 
 @Service
 @Slf4j
 public class SeleniumServiceImpl implements SeleniumService {
 
-    private final String env;
-    private final WebDriver driver;
-    private final Wait<WebDriver> wait;
+    @Value("${spring.profiles.active:}")
+    public String env;
 
-    public SeleniumServiceImpl(
-            @Value("${spring.profiles.active:}") String env,
-            WebDriver driver
-    ) {
-        this.env = env;
+    @Value("${chrome.driver.extension}")
+    public String chromeExtension;
+
+    private WebDriver driver;
+    private Wait<WebDriver> wait;
+
+    @Override
+    public void setDriver(WebDriver driver) {
         this.driver = driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(2));
+        this.wait = WebDriverConfig.getWaitDriverInstance(driver);
     }
 
     @Override
@@ -45,10 +48,10 @@ public class SeleniumServiceImpl implements SeleniumService {
             String originalWindow = driver.getWindowHandle();
             Thread.sleep(1000);
             driver.switchTo().newWindow(WindowType.TAB);
-            driver.get("chrome-extension://okpidcojinmlaakglciglbpcpajaibco/popup.html?url=aHR0cHM6Ly93d3cubGlua2VkaW4uY29tLw%3D%3D");
-//            if (StringUtils.equals(env, ProfileEnum.PROD.getName())) {
+            driver.get(chromeExtension);
+            if (StringUtils.equals(env, ProfileEnum.PROD.getName())) {
                 ((RemoteWebDriver) driver).setFileDetector(new LocalFileDetector());
-//            }
+            }
             WebElement fileInput = driver.findElement(By.cssSelector("input[type=file]"));
             File tempFile = File.createTempFile("temp", null);
             cookieFile.transferTo(tempFile);
@@ -67,6 +70,7 @@ public class SeleniumServiceImpl implements SeleniumService {
 
     @Override
     public void searchByFilter(FilterDTO filterDTO) {
+
         WebElement searchBarInp = driver.findElement(By.className("search-global-typeahead__input"));
         wait.until(d -> searchBarInp.isDisplayed());
 

@@ -1,9 +1,12 @@
 package com.hanstack.linkedintool.service;
 
 import com.hanstack.linkedintool.dto.FilterDTO;
+import org.openqa.selenium.WebDriver;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface SeleniumService {
+
+    void setDriver(WebDriver webDriver);
 
     void startLinkedin();
 
