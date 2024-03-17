@@ -12,22 +12,22 @@
         
     })
 </script>
-<div aria-atomic="true"
-     aria-live="assertive"
-     class="bs-toast toast file-upload-success m-2"
-     data-bs-delay="2000"
-     role="alert">
-    <div class="toast-header">
-        <i class="bx bx-bell me-2"></i>
-        <div class="me-auto fw-medium">Bootstrap</div>
-        <small>11 mins ago</small>
-        <button aria-label="Close" class="btn-close" data-bs-dismiss="toast" type="button"></button>
+<div class="container-xxl flex-grow-1 container-p-y">
+    <div aria-atomic="true"
+         aria-live="assertive"
+         class="bs-toast toast file-upload-success m-2 position-fixed"
+         data-bs-delay="5000"
+         role="alert">
+        <div class="toast-header">
+            <i class="bx bx-bell me-2"></i>
+            <div class="me-auto fw-medium">Hanstack</div>
+            <!--             <small>11 mins ago</small> -->
+            <button aria-label="Close" class="btn-close" data-bs-dismiss="toast" type="button"></button>
+        </div>
+        <div class="toast-body">Upload file success</div>
     </div>
-    <div class="toast-body">Fruitcake chocolate bar tootsie roll gummies gummies jelly beans cake.</div>
-</div>
-<form enctype="multipart/form-data" role="form" th:action="@{/selenium/upload-cookie}" th:method="post"
-      th:object="${uploadFileDTO}">
-    <div class="container-xxl flex-grow-1 container-p-y">
+    <form enctype="multipart/form-data" role="form" th:action="@{/selenium/upload-cookie}" th:method="post"
+          th:object="${uploadFileDTO}">
         <div class="row">
             <div class="col-lg-5 col-md-4 order-0">
                 <div class="card">
@@ -43,13 +43,12 @@
                             <div class="invalid-feedback" th:errors="*{cookieFile}"
                                  th:if="${#fields.hasErrors('cookieFile')}"></div>
                         </div>
-                        <button class="btn btn-primary" type="submit">Send</button>
+                        <button class="btn btn-primary" type="submit">Upload</button>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</form>
-
+    </form>
+</div>
 </body>
 </html>

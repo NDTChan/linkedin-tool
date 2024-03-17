@@ -4,10 +4,10 @@
         const settings = $.extend({
             // These are the defaults.
             typeOpt: "bg-primary",
-            placement: "top-0 end-0"
+            placement: "top-0 start-50 translate-middle-x"
         }, options);
 
-        const toastPlacementExample = document.querySelector('.toast-placement-ex');
+        const toastPlacementExample = $(this)[0];
         let selectedType, selectedPlacement, toastPlacement;
 
         if (event === 'show') {
