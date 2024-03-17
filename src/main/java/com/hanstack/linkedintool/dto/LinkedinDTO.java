@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class LinkedinDTO {
     private FilterDTO filterDTO;
-    private LoginDTO loginDTO;
+    private UploadFileDTO uploadFileDTO;
 }

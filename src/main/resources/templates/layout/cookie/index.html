@@ -1,0 +1,55 @@
+<html th:replace="~{fragments/layout :: layout (~{::body},'cookie', 'Upload Cookie')}"
+      xmlns:th="https://www.thymeleaf.org">
+<body>
+<script th:inline="javascript">
+    $(document).ready(function () {
+        changeActiveMenu('.upload-cookie');
+        
+        const uploaded = [[${uploaded}]];
+        if (uploaded) {
+            $('.file-upload-success').hsToast('show');
+        }
+        
+    })
+</script>
+<div aria-atomic="true"
+     aria-live="assertive"
+     class="bs-toast toast file-upload-success m-2"
+     data-bs-delay="2000"
+     role="alert">
+    <div class="toast-header">
+        <i class="bx bx-bell me-2"></i>
+        <div class="me-auto fw-medium">Bootstrap</div>
+        <small>11 mins ago</small>
+        <button aria-label="Close" class="btn-close" data-bs-dismiss="toast" type="button"></button>
+    </div>
+    <div class="toast-body">Fruitcake chocolate bar tootsie roll gummies gummies jelly beans cake.</div>
+</div>
+<form enctype="multipart/form-data" role="form" th:action="@{/selenium/upload-cookie}" th:method="post"
+      th:object="${uploadFileDTO}">
+    <div class="container-xxl flex-grow-1 container-p-y">
+        <div class="row">
+            <div class="col-lg-5 col-md-4 order-0">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Upload Cookie</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label" th:for="cookieFile">Upload Cookie</label>
+                            <input th:class="${#fields.hasErrors('cookieFile') ? 'is-invalid': ''} + ' form-control'"
+                                   th:fields="*{cookieFile}" th:id="cookieFile" th:name="cookieFile"
+                                   type="file"/>
+                            <div class="invalid-feedback" th:errors="*{cookieFile}"
+                                 th:if="${#fields.hasErrors('cookieFile')}"></div>
+                        </div>
+                        <button class="btn btn-primary" type="submit">Send</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+</body>
+</html>

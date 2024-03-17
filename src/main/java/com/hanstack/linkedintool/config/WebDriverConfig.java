@@ -66,6 +66,6 @@ public class WebDriverConfig {
     }
 
     public static Wait<WebDriver> getWaitDriverInstance(WebDriver webDriver) {
-        return new WebDriverWait(webDriver, Duration.ofSeconds(2));
+        return new WebDriverWait(webDriver, Duration.ofSeconds(5));
     }
 }

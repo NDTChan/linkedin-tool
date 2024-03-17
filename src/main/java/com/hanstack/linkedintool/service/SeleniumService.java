@@ -1,16 +1,18 @@
 package com.hanstack.linkedintool.service;
 
 import com.hanstack.linkedintool.dto.FilterDTO;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.TimeoutException;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 public interface SeleniumService {
 
-    void setDriver(WebDriver webDriver);
+    void createNewDriver();
 
     void startLinkedin();
 
-    void deleteAndImportCookies(MultipartFile cookieFile) throws InterruptedException;
+    void deleteAndImportCookies(MultipartFile cookieFile) throws IOException, TimeoutException;
 
     void searchByFilter(FilterDTO filterDTO);
 

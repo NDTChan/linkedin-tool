@@ -11,9 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class LoginDTO {
-//    private String username;
-//    private String password;
-//    private boolean cookie;
+public class UploadFileDTO {
+    @NotNull
     private MultipartFile cookieFile;
 }
