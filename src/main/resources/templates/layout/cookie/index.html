@@ -9,9 +9,39 @@
         if (uploaded) {
             $('.file-upload-success').hsToast('show');
         }
+        const fileInput = $('#cookieFile');
+        
+        fileInput.change((function () {
+            $('button[type="submit"]').removeAttr('disabled');
+        }))
+        
+        if ([[${#ctx.session.uploadFileDTO}]]) {
+            // Get your file ready
+            const myFileContent = [[${uploadFileDTO.getFileByte()}]];
+            const myFileName = [[${uploadFileDTO.getFileName()}]];
+            console.log("myFileContent", myFileContent)
+            console.log("myFileName", myFileName)
+            const file = new File(myFileContent, myFileName);
+            
+            // Create a data transfer object. Similar to what you get from a `drop` event as `event.dataTransfer`
+            const dataTransfer = new DataTransfer();
+            
+            // Add your file to the file list of the object
+            dataTransfer.items.add(file);
+            
+            // Save the file list to a new variable
+            // Set your input `files` to the file list
+            fileInput[0].files = dataTransfer.files;
+        }
         
     })
 </script>
+
+<!-- <script th:inline="javascript" th:if="${!#ctx.session.isEmpty() && #ctx.session.get('hsFile') != null}"> -->
+<!--     $(document).ready(function () { -->
+<!--          -->
+<!--     }); -->
+<!-- </script> -->
 <div class="container-xxl flex-grow-1 container-p-y">
     <div aria-atomic="true"
          aria-live="assertive"
@@ -43,12 +73,18 @@
                             <div class="invalid-feedback" th:errors="*{cookieFile}"
                                  th:if="${#fields.hasErrors('cookieFile')}"></div>
                         </div>
-                        <button class="btn btn-primary" type="submit">Upload</button>
+                        <button class="btn btn-primary" th:disabled="${uploadFileDTO.cookieFile != null}"
+                                type="submit">
+                            Upload
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
     </form>
+    <!--     <input th:if="${uploadFileDTO.cookieFile.getOriginalFilename() != null}" th:value="${uploadFileDTO.cookieFile.getBytes()}" /> -->
+
+
 </div>
 </body>
 </html>

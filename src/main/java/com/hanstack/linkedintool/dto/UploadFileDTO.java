@@ -14,4 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class UploadFileDTO {
     @NotNull
     private MultipartFile cookieFile;
+
+    private byte[] fileByte;
+    private String fileName;
 }
