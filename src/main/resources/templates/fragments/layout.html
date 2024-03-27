@@ -73,12 +73,19 @@
 </head>
 
 <body>
+<div class="app-overlay">
+    <div class="spinner-border spinner-border-lg spinner-border-center text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+</div>
+
 <th:block th:if="${menu eq 'login' or menu eq 'register' or menu eq 'forgot-password'}"
           th:insert="${template}"/>
 <th:block th:unless="${menu eq 'login' or menu eq 'register' or menu eq 'forgot-password'}">
     <!-- Layout wrapper -->
     <div class="layout-wrapper layout-content-navbar">
         <div class="layout-container">
+            
             <!-- Menu -->
             <div th:replace="~{fragments/menu :: menu}">Menu</div>
             
@@ -92,6 +99,7 @@
                 
                 <!-- Content wrapper -->
                 <div class="content-wrapper">
+                    
                     <!-- Content -->
                     <th:block th:insert="${template}"/>
                     <!-- / Content -->

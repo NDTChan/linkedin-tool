@@ -15,13 +15,12 @@
             $('button[type="submit"]').removeAttr('disabled');
         }))
         
-        if ([[${#ctx.session.uploadFileDTO}]]) {
+        if ([[${#ctx.session.hsFile != null}]]) {
             // Get your file ready
-            const myFileContent = [[${uploadFileDTO.getFileByte()}]];
-            const myFileName = [[${uploadFileDTO.getFileName()}]];
-            console.log("myFileContent", myFileContent)
-            console.log("myFileName", myFileName)
-            const file = new File(myFileContent, myFileName);
+            const myFileContent = [[${#ctx.session.hsFile != null ? #ctx.session.hsFile.fileByte: ''}]];
+            const myFileName = [[${#ctx.session.hsFile != null ? #ctx.session.hsFile.fileName: ''}]];
+            
+            const file = new File([myFileContent], myFileName);
             
             // Create a data transfer object. Similar to what you get from a `drop` event as `event.dataTransfer`
             const dataTransfer = new DataTransfer();
@@ -35,6 +34,10 @@
         }
         
     })
+    
+    function showLoading() {
+        $('.app-overlay').addClass('show');
+    }
 </script>
 
 <!-- <script th:inline="javascript" th:if="${!#ctx.session.isEmpty() && #ctx.session.get('hsFile') != null}"> -->
@@ -57,6 +60,7 @@
         <div class="toast-body">Upload file success</div>
     </div>
     <form enctype="multipart/form-data" role="form" th:action="@{/selenium/upload-cookie}" th:method="post"
+          onsubmit="showLoading()"
           th:object="${uploadFileDTO}">
         <div class="row">
             <div class="col-lg-5 col-md-4 order-0">
@@ -73,7 +77,7 @@
                             <div class="invalid-feedback" th:errors="*{cookieFile}"
                                  th:if="${#fields.hasErrors('cookieFile')}"></div>
                         </div>
-                        <button class="btn btn-primary" th:disabled="${uploadFileDTO.cookieFile != null}"
+                        <button class="btn btn-primary" th:disabled="${#ctx.session.hsFile != null}"
                                 type="submit">
                             Upload
                         </button>

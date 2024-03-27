@@ -9677,6 +9677,12 @@ button.list-group-item-gray.active {
   border-width: 0.3em;
 }
 
+.spinner-border-center {
+  position: relative;
+  left: calc(50% - 50px);
+  top: 50%;
+}
+
 .spinner-grow-lg {
   width: 3rem;
   height: 3rem;
@@ -15971,7 +15977,7 @@ body {
   bottom: 0;
   background-color: rgba(67, 89, 113, 0.5);
   visibility: hidden;
-  z-index: 3;
+  z-index: 9999;
   transition: all 0.25s ease;
 }
 .app-overlay.show {

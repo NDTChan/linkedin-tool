@@ -1,11 +1,11 @@
 package com.hanstack.linkedintool.controller;
 
+import com.hanstack.linkedintool.dto.FileDTO;
 import com.hanstack.linkedintool.dto.FilterDTO;
 import com.hanstack.linkedintool.dto.LinkedinDTO;
 import com.hanstack.linkedintool.dto.UploadFileDTO;
 import com.hanstack.linkedintool.enums.ToolbarEnum;
 import com.hanstack.linkedintool.service.SeleniumService;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -18,11 +18,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.servlet.support.RequestContextUtils;
 
 import java.io.IOException;
-import java.util.Map;
 import java.util.Objects;
 
 @Controller
@@ -52,37 +49,32 @@ public class SeleniumController {
     }
 
     @GetMapping("/upload-cookie")
-    public String viewCookie(Model model, HttpServletRequest httpServletRequest, HttpSession httpSession) throws IOException {
-        Map<String, ?> inputFlashMap = RequestContextUtils.getInputFlashMap(httpServletRequest);
-        if (Objects.nonNull(inputFlashMap)) {
-            model.addAttribute("uploaded", Boolean.TRUE);
-        } else {
-            model.addAttribute("uploaded", Boolean.FALSE);
+    public String viewCookie(Model model, HttpSession httpSession) {
+        boolean uploaded = Boolean.FALSE;
+        if (Objects.nonNull(model.getAttribute("uploaded"))) {
+            uploaded = Boolean.TRUE;
         }
 
-        UploadFileDTO uploadFileDTO = new UploadFileDTO();
-        if (Objects.nonNull(httpSession.getAttribute("uploadFileDTO"))) {
-            uploadFileDTO = (UploadFileDTO) httpSession.getAttribute("uploadFileDTO");
-        }
-        model.addAttribute("uploadFileDTO", uploadFileDTO);
+        model.addAttribute("uploaded", uploaded);
+        model.addAttribute("uploadFileDTO", new UploadFileDTO());
 
         return "layout/cookie/index";
     }
 
     @PostMapping("/upload-cookie")
     public String uploadCookie(@Valid @ModelAttribute("uploadFileDTO") UploadFileDTO uploadFileDTO,
-                               HttpServletRequest httpServletRequest,
                                BindingResult result,
-                               RedirectAttributes redirectAttributes,
                                HttpSession httpSession,
                                Model model) {
+        FileDTO fileDTO = new FileDTO();
         try {
             if (Objects.nonNull(uploadFileDTO.getCookieFile()) && uploadFileDTO.getCookieFile().isEmpty()) {
                 result.rejectValue("cookieFile", "cookie.file.not.exist");
                 return "layout/cookie/index";
             }
-            uploadFileDTO.setFileByte(uploadFileDTO.getCookieFile().getBytes());
-            uploadFileDTO.setFileName(uploadFileDTO.getCookieFile().getOriginalFilename());
+
+            fileDTO.setFileName(uploadFileDTO.getCookieFile().getOriginalFilename());
+            fileDTO.setFileByte(uploadFileDTO.getCookieFile().getBytes());
 
             seleniumService.createNewDriver();
             seleniumService.startLinkedin();
@@ -100,10 +92,9 @@ public class SeleniumController {
             return "layout/cookie/index";
         }
 
+        httpSession.setAttribute("hsFile", fileDTO);
+        model.addAttribute("uploaded", Boolean.TRUE);
 
-        httpSession.setAttribute("uploadFileDTO", uploadFileDTO);
-        redirectAttributes.addFlashAttribute("uploaded", Boolean.TRUE);
-        redirectAttributes.addFlashAttribute("uploadFileDTO", uploadFileDTO);
         return "redirect:/selenium/upload-cookie";
     }
 }
